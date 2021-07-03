@@ -1,12 +1,14 @@
 import './App.css';
 import Countdown from './Countdown';
+import Login from './Login';
 
 function App() {
   return (
     <div className="app">
-      <div className="app_body">
-        <Countdown/>
-      </div>
+        <Login/>
+        {/* <div className="app_body">
+          <Countdown/>
+        </div> */}
     </div>
   );
 }
