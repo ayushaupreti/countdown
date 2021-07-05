@@ -1,14 +1,17 @@
+import React, { useState } from "react";
 import './App.css';
-import Countdown from './Countdown';
-import Login from './Login';
+import Routes from "./Routes";
+import { AppContext } from "./libs/contextLib";
 
 function App() {
+
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
+
   return (
     <div className="app">
-        <Login/>
-        {/* <div className="app_body">
-          <Countdown/>
-        </div> */}
+      <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+        <Routes />
+      </AppContext.Provider>
     </div>
   );
 }
