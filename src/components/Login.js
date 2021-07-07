@@ -199,20 +199,22 @@ const Login = () => {
                     {readyToVerify ? 
                             <div>
                                 <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white'>{count}</span></p>
-                                <input
-                                    className="input"
-                                    placeholder="Enter Code"
-                                    value={code}
-                                    onChange={(e) => handleCodeChange(e)}
-                                    invalid={codeInvalid.toString()} />
-                                <button
-                                    className="submit"
-                                    type="submit"
-                                    disabled={loading}
-                                    onClick={() => { verify(code) }}>{loading ? 'Verifying...' : 'Verify OTP'}  
-                                </button>
+                                <div className="login_input">
+                                    <input
+                                        className="input"
+                                        placeholder="Enter Code"
+                                        value={code}
+                                        onChange={(e) => handleCodeChange(e)}
+                                        invalid={codeInvalid.toString()} />
+                                    <button
+                                        className="submit"
+                                        type="submit"
+                                        disabled={loading}
+                                        onClick={() => { verify(code) }}>{loading ? 'Verifying...' : 'Verify OTP'}
+                                    </button>
+                                </div>
                             </div>
-                        : <div>
+                        : <div className="login_input">
                             <input
                                 className="input"
                                 placeholder="Enter Email"

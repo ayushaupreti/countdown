@@ -1,18 +1,6 @@
 .app {
-  background-color: #9b9b9b;
+  /* background-color: #9b9b9b; */
   display: grid;
   place-items: center;
   height: 100vh;
-}
-
-.app_body {
-  display: flex;
-  width: 80%;
-  height: 80%;
-  background-color: #ededed;
-  box-shadow: -1px 4px 25px -8px rgb(24, 31, 46);
-  border-radius: 20px !important;
-  overflow: hidden;
-  display: grid;
-  place-items: center;
 }

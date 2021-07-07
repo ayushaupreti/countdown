@@ -1,26 +1,32 @@
-.countdown {
+.new_countdown {
     height: 100vh;
     width: 100vw;
     display: grid;
-    background-color: #ededed;
-    padding: 100px;
+    place-items: center;
 }
 
-/* .countdown_container {
+.new_countdown_container {
     padding: 30px;
     height: 75vh;
     width: 75vw;
     background-color: #ededed;
     border-radius: 20px !important;
     box-shadow: -1px 4px 25px -8px rgb(24, 31, 46);
-} */
+}
 
 .title-input {
     padding: 5px;
 }
 
-.countdown_card {
-    padding: 10px;
-    border-style: solid;
-    width: 25%;
+.new_countdown_action_buttons {
+    display: flex;
+    justify-content: space-between;
+}
+
+.new_countdown_title {
+    text-align: center;
+}
+
+.new_countdown_date {
+    text-align: center;
 }
