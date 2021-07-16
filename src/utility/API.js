@@ -1,4 +1,4 @@
-import config from "config/AWSConfig";
+import config from "../config/AWSConfig";
 import { Auth } from "aws-amplify";
 import axios from 'axios';
 

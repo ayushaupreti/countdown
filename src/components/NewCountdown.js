@@ -1,27 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
+import validator from 'validator'
+import * as uuid from "uuid";
+import API from '../utility/API';
 import '../styling/NewCountdown.css';
 
 const NewCountdown = () => {
 
     const history = useHistory();
 
-    const [open, setOpen] = useState(false);
-    const [startDate, setStartDate] = useState(new Date());
     const [title, setTitle] = useState("");
     const [date, setDate] = useState("");
-    const [id, setId] = useState("");
-
+    const [month, setMonth] = useState("");
+    const [day, setDay] = useState("");
+    const [year, setYear] = useState("");
+    const [id, setId] = useState(uuid.v4());
+    const [errorMessage, setErrorMessage] = useState("");
 
     const minuteSeconds = 60;
     const hourSeconds = 3600;
     const daySeconds = 86400;
 
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
-    const endTime = new Date(2021, 6, 24) / 1000; // use UNIX timestamp in seconds
+    const today = new Date()
+    const tomorrow = new Date(today)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const endTime = tomorrow / 1000; // use UNIX timestamp in seconds
 
     const remainingTime = endTime - startTime;
     const days = Math.ceil(remainingTime / daySeconds);
@@ -31,6 +38,7 @@ const NewCountdown = () => {
         size: 120,
         strokeWidth: 6
     };
+
     const renderTime = (dimension, time) => {
         return (
             <div className="time-wrapper">
@@ -45,7 +53,6 @@ const NewCountdown = () => {
     const getTimeDays = (time) => (time / daySeconds) | 0;
 
 
-
     const handleCancel = () => {
         history.push('countdowns');
     };
@@ -54,6 +61,24 @@ const NewCountdown = () => {
         e.preventDefault();
         let value = e.target.value;
         setTitle(value);
+    };
+
+    const handleMonthChange = (e) => {
+        e.preventDefault();
+        let value = e.target.value;
+        setMonth(value);
+    };
+
+    const handleDayChange = (e) => {
+        e.preventDefault();
+        let value = e.target.value;
+        setDay(value);
+    };
+
+    const handleYearChange = (e) => {
+        e.preventDefault();
+        let value = e.target.value;
+        setYear(value);
     };
 
     const handleDateChange = (e) => {
@@ -69,9 +94,20 @@ const NewCountdown = () => {
     };
 
     const submitEvent = () => {
-        console.log(`${title} on ${date}`);
+        API.addEvent(title, date, id);
         history.push('countdowns');
     };
+
+    useEffect(() => {
+        if(month !== "" && day !== "" && year !== ""){
+            const eventDate = new Date(`{Month}`)
+            if (validator.isDate(eventDate)) {
+                setErrorMessage('Valid Date')
+            } else {
+                setErrorMessage('Enter Valid Date!')
+            }
+        }
+    }, [month, day, year]);
 
 
     return (
@@ -81,39 +117,48 @@ const NewCountdown = () => {
                     <CancelIcon fontSize="large" onClick={handleCancel}/>
                     <CheckCircleIcon fontSize="large" onClick={submitEvent}/>
                 </div>
-                {/* <div className="row d-flex justify-content-center">
+                <div className="row my-5 d-flex justify-content-center">
                     <form>
-                        <div className="form-group col-md-6">
-                            <input 
-                                type="name" 
-                                placeholder="Title"
-                                label="Title"
-                                value={title}
-                                onChange={(e) => handleTitleChange(e)}/>
+                        <div className="form-row mb-4">
+                            <div class="col">
+                                <input
+                                    className="w-100"
+                                    type="name"
+                                    placeholder="Title"
+                                    label="Title"
+                                    value={title}
+                                    onChange={(e) => handleTitleChange(e)} />
+                            </div>
                         </div>
-                        <div className="form-group col-md-6">
-                            <input
-                                type="name"
-                                placeholder="Month"
-                                label="Title"
-                                value={title}
-                                onChange={(e) => handleTitleChange(e)} />
-                            <input
-                                type="name"
-                                placeholder="Day"
-                                label="Title"
-                                value={title}
-                                onChange={(e) => handleTitleChange(e)} />
-                            <input
-                                type="name"
-                                placeholder="Year"
-                                label="Title"
-                                value={title}
-                                onChange={(e) => handleTitleChange(e)} />
-                        </div>
+                        <div className="form-row">
+                                <div class="col">
+                                    <input
+                                        type="name"
+                                        placeholder="Month"
+                                        label="Title"
+                                        value={month}
+                                        onChange={(e) => handleMonthChange(e)} />
+                                </div>
+                                <div class="col">
+                                    <input
+                                        type="name"
+                                        placeholder="Day"
+                                        label="Title"
+                                        value={day}
+                                        onChange={(e) => handleDayChange(e)} />
+                                </div>
+                                <div class="col">
+                                    <input
+                                        type="name"
+                                        placeholder="Year"
+                                        label="Title"
+                                        value={year}
+                                        onChange={(e) => handleYearChange(e)} />
+                                </div>
+                            </div>
                     </form>
-                </div> */}
-                <div className="d-flex justify-content-around p-5">
+                </div>
+                <div className="d-flex justify-content-around p-5 m-5">
                     <CountdownCircleTimer
                         {...timerProps}
                         colors={[["#7E2E84"]]}
@@ -172,33 +217,20 @@ const NewCountdown = () => {
                         }
                     </CountdownCircleTimer>
                 </div>
-                <div>
-                    {/* <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                        <DialogTitle id="form-dialog-title">New Event</DialogTitle>
-                        <DialogContent>
-                            <DialogContentText>
-                                Add an event title and date.
-                            </DialogContentText>
-                            <form>
-                                <input
-                                    className="title-input"
-                                    placeholder="Title"
-                                    label="Title"
-                                    value={title}
-                                    onChange={(e) => handleTitleChange(e)}
-                                    fullwidth="true"
-                                />
-                            </form>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleClose} color="primary">
-                                Cancel
-                            </Button>
-                            <Button onClick={submitEvent} color="primary">
-                                Add Event
-                            </Button>
-                        </DialogActions>
-                    </Dialog> */}
+                <div className="row my-5 d-flex justify-content-center align-items-center">
+                    <p style={{ display: "inline" }} className="font-weight-bold"> Change the url: &nbsp;</p>
+                    <p style={{ display: "inline" }} >https://countdown.com/event/
+                        <form style={{display: "inline-block"}}>
+                            <input
+                                style={{ width: "350px" }}
+                                className="mx-1"
+                                type="name"
+                                placeholder={id}
+                                label="event id"
+                                value={id}
+                                onChange={(e) => handleIdChange(e)} />
+                        </form> 
+                    </p>
                 </div>
             </div>
         </div>
