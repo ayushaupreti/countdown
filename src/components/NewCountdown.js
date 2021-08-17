@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router'; 
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import { CountdownCircleTimer } from "react-countdown-circle-timer";
@@ -7,6 +7,8 @@ import validator from 'validator'
 import * as uuid from "uuid";
 import API from '../utility/API';
 import '../styling/NewCountdown.css';
+import $ from 'jquery';
+
 
 const NewCountdown = () => {
 
@@ -19,6 +21,8 @@ const NewCountdown = () => {
     const [year, setYear] = useState("");
     const [id, setId] = useState(uuid.v4());
     const [errorMessage, setErrorMessage] = useState("");
+
+    const [screenWidth, setScreenWidth] = useState("");
 
     const minuteSeconds = 60;
     const hourSeconds = 3600;
@@ -51,7 +55,6 @@ const NewCountdown = () => {
     const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
     const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
     const getTimeDays = (time) => (time / daySeconds) | 0;
-
 
     const handleCancel = () => {
         history.push('countdowns');
@@ -109,13 +112,18 @@ const NewCountdown = () => {
         }
     }, [month, day, year]);
 
+    useEffect(() => {
+        setScreenWidth($(window).width())
+        // eslint-disable-next-line
+    }, []);
+
 
     return (
-        <div className="new_countdown">
-            <div className="new_countdown_container">
-                <div className="new_countdown_action_buttons">
-                    <CancelIcon fontSize="large" onClick={handleCancel}/>
-                    <CheckCircleIcon fontSize="large" onClick={submitEvent}/>
+        <div class="container">
+            <div class="">
+                <div className="d-flex justify-content-between">
+                    <CancelIcon fontSize="large" onClick={handleCancel} />
+                    <CheckCircleIcon fontSize="large" onClick={submitEvent} />
                 </div>
                 <div className="row my-5 d-flex justify-content-center">
                     <form>
@@ -131,40 +139,40 @@ const NewCountdown = () => {
                             </div>
                         </div>
                         <div className="form-row">
-                                <div class="col">
-                                    <input
-                                        type="name"
-                                        placeholder="Month"
-                                        label="Title"
-                                        value={month}
-                                        onChange={(e) => handleMonthChange(e)} />
-                                </div>
-                                <div class="col">
-                                    <input
-                                        type="name"
-                                        placeholder="Day"
-                                        label="Title"
-                                        value={day}
-                                        onChange={(e) => handleDayChange(e)} />
-                                </div>
-                                <div class="col">
-                                    <input
-                                        type="name"
-                                        placeholder="Year"
-                                        label="Title"
-                                        value={year}
-                                        onChange={(e) => handleYearChange(e)} />
-                                </div>
+                            <div class="col">
+                                <input
+                                    type="name"
+                                    placeholder="Month"
+                                    label="Title"
+                                    value={month}
+                                    onChange={(e) => handleMonthChange(e)} />
                             </div>
+                            <div class="col">
+                                <input
+                                    type="name"
+                                    placeholder="Day"
+                                    label="Title"
+                                    value={day}
+                                    onChange={(e) => handleDayChange(e)} />
+                            </div>
+                            <div class="col">
+                                <input
+                                    type="name"
+                                    placeholder="Year"
+                                    label="Title"
+                                    value={year}
+                                    onChange={(e) => handleYearChange(e)} />
+                            </div>
+                        </div>
                     </form>
                 </div>
-                <div className="d-flex justify-content-around p-5 m-5">
+                <div className="d-flex justify-content-around m-5">
                     <CountdownCircleTimer
                         {...timerProps}
                         colors={[["#7E2E84"]]}
                         duration={daysDuration}
-                        size="160"
-                        strokeWidth="12"
+                        size={screenWidth / 4}
+                        strokeWidth="11"
                         initialRemainingTime={remainingTime}
                     >
                         {({ elapsedTime }) =>
@@ -175,8 +183,8 @@ const NewCountdown = () => {
                         {...timerProps}
                         colors={[["#D14081"]]}
                         duration={daySeconds}
-                        size="160"
-                        strokeWidth="12"
+                        size={screenWidth / 4}
+                        strokeWidth="11"
                         initialRemainingTime={remainingTime % daySeconds}
                         onComplete={(totalElapsedTime) => [
                             remainingTime - totalElapsedTime > hourSeconds
@@ -190,8 +198,8 @@ const NewCountdown = () => {
                         {...timerProps}
                         colors={[["#EF798A"]]}
                         duration={hourSeconds}
-                        size="160"
-                        strokeWidth="12"
+                        size={screenWidth / 4}
+                        strokeWidth="11"
                         initialRemainingTime={remainingTime % hourSeconds}
                         onComplete={(totalElapsedTime) => [
                             remainingTime - totalElapsedTime > minuteSeconds
@@ -205,8 +213,8 @@ const NewCountdown = () => {
                         {...timerProps}
                         colors={[["#218380"]]}
                         duration={minuteSeconds}
-                        size="160"
-                        strokeWidth="12"
+                        size={screenWidth / 4}
+                        strokeWidth="11"
                         initialRemainingTime={remainingTime % minuteSeconds}
                         onComplete={(totalElapsedTime) => [
                             remainingTime - totalElapsedTime > 0
@@ -220,7 +228,7 @@ const NewCountdown = () => {
                 <div className="row my-5 d-flex justify-content-center align-items-center">
                     <p style={{ display: "inline" }} className="font-weight-bold"> Change the url: &nbsp;</p>
                     <p style={{ display: "inline" }} >https://countdown.com/event/
-                        <form style={{display: "inline-block"}}>
+                        <form style={{ display: "inline-block" }}>
                             <input
                                 style={{ width: "350px" }}
                                 className="mx-1"
@@ -229,7 +237,7 @@ const NewCountdown = () => {
                                 label="event id"
                                 value={id}
                                 onChange={(e) => handleIdChange(e)} />
-                        </form> 
+                        </form>
                     </p>
                 </div>
             </div>

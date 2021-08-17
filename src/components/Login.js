@@ -40,8 +40,7 @@ const Login = () => {
             setCodeFeedback('')
         }
     }
-
-
+ 
     const showAlert = (message) => {
         setShow(false)
         setMessage(message)
@@ -84,6 +83,7 @@ const Login = () => {
             setEmailFeedback('')
         }
     }
+
     const isEmailInvalid = (value) => {
         // eslint-disable-next-line
         var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -189,41 +189,40 @@ const Login = () => {
     }
 
     return (
-        <div className="login">
-            <div className="login_container">
-                <div className="login_text">
-                    <h1>Enter your email!</h1>
+        <div>
+                <div className="login_text p-4">
+                    <h3>Enter your email!</h3>
                     <p>You will recieve a one-time password in your email to login and get started.</p>
                 </div>
-                <form className="login_form">
+                <form className="px-5">
                     {readyToVerify ? 
                             <div>
                                 <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white'>{count}</span></p>
-                                <div className="login_input">
+                                <div className="row">
                                     <input
-                                        className="input"
+                                        className="col-12 my-1"
                                         placeholder="Enter Code"
                                         value={code}
                                         onChange={(e) => handleCodeChange(e)}
                                         invalid={codeInvalid.toString()} />
                                     <button
-                                        className="submit"
+                                        className="col-12 my-1"
                                         type="submit"
                                         disabled={loading}
                                         onClick={() => { verify(code) }}>{loading ? 'Verifying...' : 'Verify OTP'}
                                     </button>
                                 </div>
                             </div>
-                        : <div className="login_input">
+                        : <div className="row">
                             <input
-                                className="input"
+                                className="col-12 my-1"
                                 placeholder="Enter Email"
                                 value={email}
                                 onChange={(e) => handleEmailChange(e)}
                                 invalid={emailInvalid.toString()}
                                 valid={(!emailInvalid && email !== '').toString()} />
                             <button
-                                className="submit"
+                                className="col-12 my-1"
                                 type="submit"
                                 disabled={loading || emailInvalid}
                                 onClick={() => { login(email) }}>{loading ? 'Fetching...' : 'Get OTP'}
@@ -233,7 +232,6 @@ const Login = () => {
                     {codeInvalid ? <p>{codeFeedback}</p> : <p></p>}
                     {emailInvalid ? <p>{emailFeedback}</p> : <p></p>}
                 </form>
-            </div>
         </div>
     )
 }

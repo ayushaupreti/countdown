@@ -1,10 +1,10 @@
-.countdown {
+/* .countdown {
     height: 100vh;
     width: 100vw;
     display: grid;
     background-color: #ededed;
     padding: 100px;
-}
+} */
 
 /* .countdown_container {
     padding: 30px;
@@ -15,7 +15,7 @@
     box-shadow: -1px 4px 25px -8px rgb(24, 31, 46);
 } */
 
-.title-input {
+/* .title-input {
     padding: 5px;
 }
 
@@ -23,4 +23,4 @@
     padding: 10px;
     border-style: solid;
     width: 25%;
-}
+} */
