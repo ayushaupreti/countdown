@@ -1,8 +1,8 @@
 import React, { useState, useEffect} from 'react';
 import { useHistory } from 'react-router';
 import AddBoxIcon from '@material-ui/icons/AddBox'; 
-import ShareIcon from '@material-ui/icons/Share';
-import EditIcon from '@material-ui/icons/Edit';
+// import ShareIcon from '@material-ui/icons/Share';
+// import EditIcon from '@material-ui/icons/Edit';
 import API from '../utility/API';
 import * as uuid from "uuid";
 import '../styling/Countdown.css';

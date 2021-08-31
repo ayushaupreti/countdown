@@ -189,49 +189,49 @@ const Login = () => {
     }
 
     return (
-        <div>
-                <div className="login_text p-4">
-                    <h3>Enter your email!</h3>
-                    <p>You will recieve a one-time password in your email to login and get started.</p>
-                </div>
-                <form className="px-5">
-                    {readyToVerify ? 
-                            <div>
-                                <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white'>{count}</span></p>
-                                <div className="row">
-                                    <input
-                                        className="col-12 my-1"
-                                        placeholder="Enter Code"
-                                        value={code}
-                                        onChange={(e) => handleCodeChange(e)}
-                                        invalid={codeInvalid.toString()} />
-                                    <button
-                                        className="col-12 my-1"
-                                        type="submit"
-                                        disabled={loading}
-                                        onClick={() => { verify(code) }}>{loading ? 'Verifying...' : 'Verify OTP'}
-                                    </button>
-                                </div>
-                            </div>
-                        : <div className="row">
+        <div className="my-auto">
+            <div className="login_text p-4">
+                <h3>Enter your email!</h3>
+                <p>You will recieve a one-time password in your email to login and get started.</p>
+            </div>
+            <form className="px-5">
+                {readyToVerify ?
+                    <div>
+                        <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white'>{count}</span></p>
+                        <div className="row">
                             <input
                                 className="col-12 my-1"
-                                placeholder="Enter Email"
-                                value={email}
-                                onChange={(e) => handleEmailChange(e)}
-                                invalid={emailInvalid.toString()}
-                                valid={(!emailInvalid && email !== '').toString()} />
+                                placeholder="Enter Code"
+                                value={code}
+                                onChange={(e) => handleCodeChange(e)}
+                                invalid={codeInvalid.toString()} />
                             <button
                                 className="col-12 my-1"
                                 type="submit"
-                                disabled={loading || emailInvalid}
-                                onClick={() => { login(email) }}>{loading ? 'Fetching...' : 'Get OTP'}
+                                disabled={loading}
+                                onClick={() => { verify(code) }}>{loading ? 'Verifying...' : 'Verify OTP'}
                             </button>
                         </div>
-                    }
-                    {codeInvalid ? <p>{codeFeedback}</p> : <p></p>}
-                    {emailInvalid ? <p>{emailFeedback}</p> : <p></p>}
-                </form>
+                    </div>
+                    : <div className="row">
+                        <input
+                            className="col-12 my-1"
+                            placeholder="Enter Email"
+                            value={email}
+                            onChange={(e) => handleEmailChange(e)}
+                            invalid={emailInvalid.toString()}
+                            valid={(!emailInvalid && email !== '').toString()} />
+                        <button
+                            className="col-12 my-1"
+                            type="submit"
+                            disabled={loading || emailInvalid}
+                            onClick={() => { login(email) }}>{loading ? 'Fetching...' : 'Get OTP'}
+                        </button>
+                    </div>
+                }
+                {codeInvalid ? <p>{codeFeedback}</p> : <p></p>}
+                {emailInvalid ? <p>{emailFeedback}</p> : <p></p>}
+            </form>
         </div>
     )
 }
