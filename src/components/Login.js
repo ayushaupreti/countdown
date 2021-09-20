@@ -189,28 +189,24 @@ const Login = () => {
     }
 
     return (
-        <div className="my-auto d-flex justify-content-center">
-            <div className="login_text p-4">
-                <div className="row">
-                    <h3>Enter your email!</h3>
-                </div>
-                <div className="row">
-                    <p>You will receive a one-time password in your email to login and get started.</p>
-                </div>
-            </div>
-            {/* <form className="px-5">
+        <div className="container p-4 h-100 d-flex align-items-center">
+            <div className="row login_text p-4">
+                <h3 className="col-12">Enter your email!</h3>
+                <p className="col-12">You will receive a one-time password in your email to login and get started.</p>
+             </div>
+            <form className="row px-5">
                 {readyToVerify ?
                     <div>
-                        <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white'>{count}</span></p>
+                        <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white rounded-pill'>{count}</span></p>
                         <div className="row">
                             <input
-                                className="col-12 my-1"
+                                className="col-12 my-1 border-top-0 border-left-0 border-right-0 bg-transparent"
                                 placeholder="Enter Code"
                                 value={code}
                                 onChange={(e) => handleCodeChange(e)}
                                 invalid={codeInvalid.toString()} />
                             <button
-                                className="col-12 my-1"
+                                className="btn btn-light border border-dark col-12 my-1 bg-transparent"
                                 type="submit"
                                 disabled={loading}
                                 onClick={() => { verify(code) }}>{loading ? 'Verifying...' : 'Verify OTP'}
@@ -219,14 +215,14 @@ const Login = () => {
                     </div>
                     : <div className="row">
                         <input
-                            className="col-12 my-1"
+                            className="col-12 my-1 border-top-0 border-left-0 border-right-0 bg-transparent"
                             placeholder="Enter Email"
                             value={email}
                             onChange={(e) => handleEmailChange(e)}
                             invalid={emailInvalid.toString()}
                             valid={(!emailInvalid && email !== '').toString()} />
                         <button
-                            className="col-12 my-1"
+                            className="btn btn-light border border-dark col-12 my-1 bg-transparent"
                             type="submit"
                             disabled={loading || emailInvalid}
                             onClick={() => { login(email) }}>{loading ? 'Fetching...' : 'Get OTP'}
@@ -235,7 +231,7 @@ const Login = () => {
                 }
                 {codeInvalid ? <p>{codeFeedback}</p> : <p></p>}
                 {emailInvalid ? <p>{emailFeedback}</p> : <p></p>}
-            </form> */}
+            </form>
         </div>
     )
 }
