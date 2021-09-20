@@ -189,12 +189,16 @@ const Login = () => {
     }
 
     return (
-        <div className="my-auto">
+        <div className="my-auto d-flex justify-content-center">
             <div className="login_text p-4">
-                <h3>Enter your email!</h3>
-                <p>You will recieve a one-time password in your email to login and get started.</p>
+                <div className="row">
+                    <h3>Enter your email!</h3>
+                </div>
+                <div className="row">
+                    <p>You will receive a one-time password in your email to login and get started.</p>
+                </div>
             </div>
-            <form className="px-5">
+            {/* <form className="px-5">
                 {readyToVerify ?
                     <div>
                         <p className="mb-3 font-weight-bold">Seconds left <span className='px-2 ml-1 bg-dark text-white'>{count}</span></p>
@@ -231,7 +235,7 @@ const Login = () => {
                 }
                 {codeInvalid ? <p>{codeFeedback}</p> : <p></p>}
                 {emailInvalid ? <p>{emailFeedback}</p> : <p></p>}
-            </form>
+            </form> */}
         </div>
     )
 }

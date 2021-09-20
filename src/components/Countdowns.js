@@ -26,7 +26,6 @@ const Countdowns = () => {
     };
 
     return (
-        <div>
             <div className="row d-flex align-items-center">
                 {events.length > 0 ? events.map((event, index) =>
                     <div className="mb-4 col-12 col-md-3">
@@ -58,7 +57,6 @@ const Countdowns = () => {
                     </button>
                 </div>
             </div>
-        </div>
     )
 }
 

@@ -1,7 +1,6 @@
 .app {
-  /* display: grid; */
-  place-items: center;
   padding: 1rem;
   background-color: #fff1f1;
-  height: 100vh;
+   height: 100vh;
+  overflow: auto;
 }
