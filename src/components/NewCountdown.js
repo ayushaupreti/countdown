@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import { CountdownCircleTimer } from "react-countdown-circle-timer";
 import validator from 'validator'
 import * as uuid from "uuid";
 import API from '../utility/API';
@@ -21,30 +20,33 @@ const NewCountdown = () => {
 
     const [screenWidth, setScreenWidth] = useState("");
 
-    const minuteSeconds = 60;
-    const hourSeconds = 3600;
-    const daySeconds = 86400;
-
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
     const today = new Date()
     const tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 1)
+    tomorrow.setDate(tomorrow.getDate() + 4)
     const endTime = tomorrow / 1000; // use UNIX timestamp in seconds
 
-    const [month, setMonth] = useState("");
+    const [month, setMonth] = useState(tomorrow.getMonth());
     const [day, setDay] = useState("");
     const [year, setYear] = useState("");
 
     const [monthsArray, setMonthsArray] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
 
-    const remainingTime = endTime - startTime;
-    const days = Math.ceil(remainingTime / daySeconds);
-    const daysDuration = days * daySeconds;
-    const timerProps = {
-        isPlaying: true,
-        size: 120,
-        strokeWidth: 6
-    };
+    const [remainingTime, setRemainingTime] = useState(endTime - startTime);
+
+    useEffect(() => {
+        const timer =
+            remainingTime > 0 && setInterval(() => setRemainingTime(remainingTime - 1), 1000);
+        return () => clearInterval(timer);
+    }, [remainingTime]);
+
+    let seconds = remainingTime;
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    let days = Math.floor(hours / 24);
+    hours = hours - (days * 24);
+    minutes = minutes - (days * 24 * 60) - (hours * 60);
+    seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
 
     const monthDisplay = (code) => {
         switch (code) {
@@ -76,19 +78,6 @@ const NewCountdown = () => {
                 return 'Month'
         }
     };
-
-    const renderTime = (dimension, time) => {
-        return (
-            <div className="time-wrapper">
-                <div className="time">{time}</div>
-                <div>{dimension}</div>
-            </div>
-        );
-    };
-    const getTimeSeconds = (time) => (minuteSeconds - time) | 0;
-    const getTimeMinutes = (time) => ((time % hourSeconds) / minuteSeconds) | 0;
-    const getTimeHours = (time) => ((time % daySeconds) / hourSeconds) | 0;
-    const getTimeDays = (time) => (time / daySeconds) | 0;
 
     const handleCancel = () => {
         history.push('countdowns');
@@ -197,7 +186,7 @@ const NewCountdown = () => {
                                     return <option
                                         key={uuid.v4()}
                                         className='py-0 pb-1 my-0'
-                                        value={month===i}
+                                        value={monthDisplay(month)}
                                         onClick={() => handleMonthChange(i)}>{monthDisplay(i)}</option>
                                 })}
                             </select>
@@ -234,96 +223,33 @@ const NewCountdown = () => {
                             </select>
                         </div>
                     </div>
-
-                    {/* <div className="form-row">
-                        <div class="form-group col-12 col-md-4">
-                            <label>Month</label>
-                            <input
-                                type="name"
-                                placeholder="Month"
-                                label="Title"
-                                value={monthDisplay(month)}
-                                onChange={(e) => handleMonthChange(e)} />
-                        </div>
-                        <div class="form-group col-12 col-md-4">
-                            <label>Day</label>
-                            <input
-                                type="name"
-                                placeholder="Day"
-                                label="Title"
-                                value={day}
-                                onChange={(e) => handleDayChange(e)} />
-                        </div>
-                        <div class="form-group col-12 col-md-4">
-                            <label>Year</label>
-                            <input
-                                type="name"
-                                placeholder="Year"
-                                label="Title"
-                                value={year}
-                                onChange={(e) => handleYearChange(e)} />
-                        </div>
-                    </div> */}
                 </form>
             </div>
-            <div className="d-flex justify-content-around m-5">
-                <CountdownCircleTimer
-                    {...timerProps}
-                    colors={[["#7E2E84"]]}
-                    duration={daysDuration}
-                    size={screenWidth / 4}
-                    strokeWidth="11"
-                    initialRemainingTime={remainingTime}
-                >
-                    {({ elapsedTime }) =>
-                        renderTime("days", getTimeDays(daysDuration - elapsedTime))
-                    }
-                </CountdownCircleTimer>
-                <CountdownCircleTimer
-                    {...timerProps}
-                    colors={[["#D14081"]]}
-                    duration={daySeconds}
-                    size={screenWidth / 4}
-                    strokeWidth="11"
-                    initialRemainingTime={remainingTime % daySeconds}
-                    onComplete={(totalElapsedTime) => [
-                        remainingTime - totalElapsedTime > hourSeconds
-                    ]}
-                >
-                    {({ elapsedTime }) =>
-                        renderTime("hours", getTimeHours(daySeconds - elapsedTime))
-                    }
-                </CountdownCircleTimer>
-                <CountdownCircleTimer
-                    {...timerProps}
-                    colors={[["#EF798A"]]}
-                    duration={hourSeconds}
-                    size={screenWidth / 4}
-                    strokeWidth="11"
-                    initialRemainingTime={remainingTime % hourSeconds}
-                    onComplete={(totalElapsedTime) => [
-                        remainingTime - totalElapsedTime > minuteSeconds
-                    ]}
-                >
-                    {({ elapsedTime }) =>
-                        renderTime("minutes", getTimeMinutes(hourSeconds - elapsedTime))
-                    }
-                </CountdownCircleTimer>
-                <CountdownCircleTimer
-                    {...timerProps}
-                    colors={[["#218380"]]}
-                    duration={minuteSeconds}
-                    size={screenWidth / 4}
-                    strokeWidth="11"
-                    initialRemainingTime={remainingTime % minuteSeconds}
-                    onComplete={(totalElapsedTime) => [
-                        remainingTime - totalElapsedTime > 0
-                    ]}
-                >
-                    {({ elapsedTime }) =>
-                        renderTime("seconds", getTimeSeconds(elapsedTime))
-                    }
-                </CountdownCircleTimer>
+            <div className="row my-5 border border-dark">
+                <div className="col-3">
+                    <div className="row">
+                        <h2>{days}</h2>
+                    </div>
+                    <div className="row">days</div>
+                </div>
+                <div className="col-3">
+                    <div className="row">
+                        <h2>{hours}</h2>
+                    </div>
+                    <div className="row">hours</div>
+                </div>
+                <div className="col-3">
+                    <div className="row">
+                        <h2>{minutes}</h2>
+                    </div>
+                    <div className="row">minutes</div>
+                </div>
+                <div className="col-3">
+                    <div className="row">
+                        <h2>{seconds}</h2>
+                    </div>
+                    <div className="row">seconds</div>
+                </div>
             </div>
             <div className="row my-5 d-flex justify-content-center align-items-center">
                 <p style={{ display: "inline" }} className="font-weight-bold"> Change the url: &nbsp;</p>
@@ -331,7 +257,7 @@ const NewCountdown = () => {
                     <form style={{ display: "inline-block" }}>
                         <input
                             style={{ width: "350px" }}
-                            className="mx-1"
+                            className="mx-1 border-top-0 border-left-0 border-right-0 bg-transparent"
                             type="name"
                             placeholder={id}
                             label="event id"
