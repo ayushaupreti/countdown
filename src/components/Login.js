@@ -14,8 +14,8 @@ const Login = () => {
     const [countTimer, setCountTimer] = useState()
     const [tries, setTries] = useState(1)
 
-    const [show, setShow] = useState(false)
-    const [message, setMessage] = useState('')
+    // const [show, setShow] = useState(false)
+    // const [message, setMessage] = useState('')
 
     const [email, setEmail] = useState('')
     const [emailInvalid, setEmailInvalid] = useState(false)
@@ -41,11 +41,11 @@ const Login = () => {
         }
     }
  
-    const showAlert = (message) => {
-        setShow(false)
-        setMessage(message)
-        setShow(true)
-    }
+    // const showAlert = (message) => {
+    //     setShow(false)
+    //     setMessage(message)
+    //     setShow(true)
+    // }
 
     const startCountDown = () => {
         const start = new Date().getTime()
@@ -141,10 +141,10 @@ const Login = () => {
                 email: em
             },
         }).then(data => {
-            showAlert('Welcome to Lagna360')
+            // showAlert('Welcome to Lagna360')
             login(em)
         }).catch(err => {
-            showAlert(err)
+            // showAlert(err)
         })
     }
 
@@ -166,7 +166,7 @@ const Login = () => {
                         setReadyToVerify(true)
                         startCountDown()
                     } else {
-                        showAlert('OOPS we are having technical issue, please try again')
+                        // showAlert('OOPS we are having technical issue, please try again')
                     }
                     setLoading(false)
                 })
@@ -174,7 +174,7 @@ const Login = () => {
                     switch (err.code) {
                         case 'NetworkError':
                             console.log('network error')
-                            showAlert(err.message)
+                            // showAlert(err.message)
                             break;
                         case 'UserNotFoundException':
                             console.log('user not found exception, registering')

@@ -2,11 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import CancelIcon from '@material-ui/icons/Cancel';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import validator from 'validator'
 import * as uuid from "uuid";
 import API from '../utility/API';
 import '../styling/NewCountdown.css';
-import $ from 'jquery';
 
 
 const NewCountdown = () => {
@@ -16,7 +14,6 @@ const NewCountdown = () => {
     const [title, setTitle] = useState("My Event");
     const [date, setDate] = useState("");
     const [id, setId] = useState(uuid.v4());
-    const [errorMessage, setErrorMessage] = useState("");
 
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
     const today = new Date()
@@ -27,6 +24,9 @@ const NewCountdown = () => {
     const [month, setMonth] = useState(tomorrow.getMonth());
     const [day, setDay] = useState(tomorrow.getDate());
     const [year, setYear] = useState(tomorrow.getFullYear());
+    const [time, setTime] = useState(tomorrow.getHours() + `:` + tomorrow.getMinutes());
+    const [hr, setHr] = useState(time.split(":")[0]);
+    const [min, setMin] = useState(time.split(":")[1]);
 
     const monthsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     
@@ -34,13 +34,12 @@ const NewCountdown = () => {
         return new Date(year, month+1, 0).getDate();
     }
     const [daysArray, setDaysArray] = useState(Array(daysInMonth(month, year)).fill(0).map((e,i)=>i+1));
-    const yearsArray = Array(50).fill(0).map((e, i) => year + i);
+    const yearsArray = Array(50).fill(today.getFullYear()).map((year, index) => year + index)
 
     const [remainingTime, setRemainingTime] = useState(endTime - startTime);
     const [timer, setTimer] = useState();
 
     useEffect(() => {
-        console.log('called once')
         if (timer) {
             clearInterval(timer);
         }
@@ -50,6 +49,7 @@ const NewCountdown = () => {
 
         setTimer(newTimer);
         return () => clearInterval(timer);
+        // eslint-disable-next-line
     }, []);
 
     let seconds = remainingTime;
@@ -105,31 +105,23 @@ const NewCountdown = () => {
         e.preventDefault();
         let value = e.target.value;
         setMonth(value);
-        // console.log(`new month ` + month);
-        setDaysArray(Array(daysInMonth(month, year)).fill(0).map((e, i) => i + 1));
-        // console.log(`new days array ` + daysArray);
+        setDaysArray(Array(daysInMonth(value, year)).fill(1).map((e, i) => i + 1));
+        updateDate(year, value, day, hr, min, 0);
     };
 
     const handleDayChange = (e) => {
         e.preventDefault();
         let value = e.target.value;
         setDay(value);
-        // console.log(`new day ` + day);
+        updateDate(year, month, value, hr, min, 0);
     };
 
     const handleYearChange = (e) => {
         e.preventDefault();
         let value = e.target.value;
         setYear(value);
-        // console.log(`new year ` + year);
-        setDaysArray(Array(daysInMonth(month, value)).fill(0).map((e, i) => i + 1));
-        // console.log(`new days array ` + daysArray);
-    };
-
-    const handleDateChange = (e) => {
-        e.preventDefault();
-        let value = e.target.value;
-        setDate(value);
+        setDaysArray(Array(daysInMonth(month, value)).fill(1).map((e, i) => i + 1));
+        updateDate(value, month, day, hr, min, 0);
     };
 
     const handleIdChange = (e) => {
@@ -143,16 +135,20 @@ const NewCountdown = () => {
         history.push('countdowns');
     };
 
-    // useEffect(() => {
-    //     if (month !== "" && day !== "" && year !== "") {
-    //         const eventDate = new Date(`{Month}`)
-    //         if (validator.isDate(eventDate)) {
-    //             setErrorMessage('Valid Date')
-    //         } else {
-    //             setErrorMessage('Enter Valid Date!')
-    //         }
-    //     }
-    // }, [month, day, year]);
+    const updateDate = (year, month, day, hr, min, sec) =>{
+        const d = new Date(year, month, day, hr, min, sec);
+        setDate(d);
+        console.log(d);
+    };
+
+    const handleTime = (e) => {
+        e.preventDefault();
+        let value = e.target.value;
+        setTime(value);
+        setHr(value.split(":")[0]);
+        setMin(value.split(":")[1]);
+        updateDate(year, month, day, value.split(":")[0], value.split(":")[1], 0);
+    };
 
     return (
         <div className="container">
@@ -160,10 +156,10 @@ const NewCountdown = () => {
                 <CancelIcon fontSize="large" onClick={handleCancel} />
                 <CheckCircleIcon fontSize="large" onClick={submitEvent} />
             </div>
-            <div className="row my-5 d-flex justify-content-center">
-                <form>
-                    <div className="form-row">
-                        <div className="form-group col-12">
+            <div className="row my-5">
+                <form className="pt-3 w-100">
+                    <div className="form-group row">
+                        <div className="col-12">
                             <input
                                 className="w-100"
                                 type="name"
@@ -174,9 +170,15 @@ const NewCountdown = () => {
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Month</label>
-                        <div className="col-sm-10">
-                            <select value={month} className="form-control" onChange={handleMonthChange}>
+                        <label className="col-2 col-form-label">Time</label>
+                        <div className="col-10">
+                            <input type="time" className="w-100" min="00:00" max="23:59" value={time} onChange={handleTime}/>
+                        </div>
+                    </div>
+                    <div className="form-group row">
+                        <label className="col-2 col-form-label">Month</label>
+                        <div className="col-10">
+                            <select value={month} className="form-control" onChange={(e) => { handleMonthChange(e)}}>
                                 {monthsArray.map(i => {
                                     return <option
                                         key={`month-`+i}
@@ -188,9 +190,9 @@ const NewCountdown = () => {
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Day</label>
-                        <div className="col-sm-10">
-                            <select value={day} className="form-control" onChange={handleDayChange}>
+                        <label className="col-2 col-form-label">Day</label>
+                        <div className="col-10">
+                            <select value={day} className="form-control" onChange={(e) => { handleDayChange(e)}}>
                                 {daysArray.map(i => {
                                     return <option
                                         key={`day-`+i}
@@ -202,9 +204,9 @@ const NewCountdown = () => {
                         </div>
                     </div>
                     <div className="form-group row">
-                        <label  className="col-sm-2 col-form-label">Year</label>
-                        <div className="col-sm-10">
-                            <select value={year} className="form-control" onChange={handleYearChange}>
+                        <label  className="col-2 col-form-label">Year</label>
+                        <div className="col-10">
+                            <select value={year} className="form-control" onChange={(e) => { handleYearChange(e)}}>
                                 {yearsArray.map(i => {
                                     return <option
                                         key={`year-`+i}
@@ -242,7 +244,7 @@ const NewCountdown = () => {
                     <div className="row">seconds</div>
                 </div>
             </div>
-            <div className="row my-5 d-flex justify-content-center align-items-center">
+            <div className="row my-5 d-flex justify-content-center align-items-center border border-dark">
                 <p style={{ display: "inline" }} className="font-weight-bold"> Change the url: &nbsp;</p>
                 <p style={{ display: "inline" }} >https://countdown.com/event/
                     <form style={{ display: "inline-block" }}>
