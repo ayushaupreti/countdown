@@ -4,15 +4,15 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 // import ShareIcon from '@material-ui/icons/Share';
 // import EditIcon from '@material-ui/icons/Edit';
 import API from '../utility/API';
-import * as uuid from "uuid";
+// import * as uuid from "uuid";
 import '../styling/Countdown.css';
 
 const Countdowns = () => {
 
     const history = useHistory();
     
-    const [title, setTitle] = useState("");
-    const [date, setDate] = useState("");
+    // const [title, setTitle] = useState("");
+    // const [date, setDate] = useState("");
     const events = [{ eventTitle: "Bday", eventDate: "june 4, 2021" }, { eventTitle: "first day of school", eventDate: "sept 4, 2021" }, { eventTitle: "christmas", eventDate: "dec 25, 2021" }, { eventTitle: "party!!!", eventDate: "july 23, 2021" }, { eventTitle: "toronto", eventDate: "july 24, 2021" }];
     // const [events, setEvents] = useState([]);
 

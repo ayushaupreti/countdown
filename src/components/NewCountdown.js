@@ -18,27 +18,39 @@ const NewCountdown = () => {
     const [id, setId] = useState(uuid.v4());
     const [errorMessage, setErrorMessage] = useState("");
 
-    const [screenWidth, setScreenWidth] = useState("");
-
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
     const today = new Date()
     const tomorrow = new Date(today)
-    tomorrow.setDate(tomorrow.getDate() + 4)
+    tomorrow.setDate(tomorrow.getDate() + 1)
     const endTime = tomorrow / 1000; // use UNIX timestamp in seconds
 
     const [month, setMonth] = useState(tomorrow.getMonth());
-    const [day, setDay] = useState("");
-    const [year, setYear] = useState("");
+    const [day, setDay] = useState(tomorrow.getDate());
+    const [year, setYear] = useState(tomorrow.getFullYear());
 
-    const [monthsArray, setMonthsArray] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    const monthsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    
+    const daysInMonth = (month, year) => {
+        return new Date(year, month+1, 0).getDate();
+    }
+    const [daysArray, setDaysArray] = useState(Array(daysInMonth(month, year)).fill(0).map((e,i)=>i+1));
+    const yearsArray = Array(50).fill(0).map((e, i) => year + i);
 
     const [remainingTime, setRemainingTime] = useState(endTime - startTime);
+    const [timer, setTimer] = useState();
 
     useEffect(() => {
-        const timer =
-            remainingTime > 0 && setInterval(() => setRemainingTime(remainingTime - 1), 1000);
+        console.log('called once')
+        if (timer) {
+            clearInterval(timer);
+        }
+        const newTimer = setInterval(() => {
+            setRemainingTime((remainingTime) => remainingTime - 1)
+        }, 1000);
+
+        setTimer(newTimer);
         return () => clearInterval(timer);
-    }, [remainingTime]);
+    }, []);
 
     let seconds = remainingTime;
     let minutes = Math.floor(seconds / 60);
@@ -93,30 +105,25 @@ const NewCountdown = () => {
         e.preventDefault();
         let value = e.target.value;
         setMonth(value);
+        // console.log(`new month ` + month);
+        setDaysArray(Array(daysInMonth(month, year)).fill(0).map((e, i) => i + 1));
+        // console.log(`new days array ` + daysArray);
     };
 
     const handleDayChange = (e) => {
         e.preventDefault();
         let value = e.target.value;
         setDay(value);
+        // console.log(`new day ` + day);
     };
 
     const handleYearChange = (e) => {
         e.preventDefault();
         let value = e.target.value;
         setYear(value);
-        if(value === today.getFullYear()){
-            console.log('SAME YEAR')
-            setMonth(monthDisplay(tomorrow.getMonth()))
-            let monthArr = [];
-            for (let i = tomorrow.getMonth(); i <= 11; i++) {
-                monthArr.push(i)
-            }
-            setMonthsArray(monthArr);
-            setDay(tomorrow.getDate())
-        } else{
-            setMonthsArray([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
-        }
+        // console.log(`new year ` + year);
+        setDaysArray(Array(daysInMonth(month, value)).fill(0).map((e, i) => i + 1));
+        // console.log(`new days array ` + daysArray);
     };
 
     const handleDateChange = (e) => {
@@ -136,25 +143,19 @@ const NewCountdown = () => {
         history.push('countdowns');
     };
 
-    useEffect(() => {
-        if (month !== "" && day !== "" && year !== "") {
-            const eventDate = new Date(`{Month}`)
-            if (validator.isDate(eventDate)) {
-                setErrorMessage('Valid Date')
-            } else {
-                setErrorMessage('Enter Valid Date!')
-            }
-        }
-    }, [month, day, year]);
-
-    useEffect(() => {
-        setScreenWidth($(window).width())
-        // eslint-disable-next-line
-    }, []);
-
+    // useEffect(() => {
+    //     if (month !== "" && day !== "" && year !== "") {
+    //         const eventDate = new Date(`{Month}`)
+    //         if (validator.isDate(eventDate)) {
+    //             setErrorMessage('Valid Date')
+    //         } else {
+    //             setErrorMessage('Enter Valid Date!')
+    //         }
+    //     }
+    // }, [month, day, year]);
 
     return (
-        <div class="container">
+        <div className="container">
             <div className="mt-3 d-flex justify-content-between">
                 <CancelIcon fontSize="large" onClick={handleCancel} />
                 <CheckCircleIcon fontSize="large" onClick={submitEvent} />
@@ -175,19 +176,13 @@ const NewCountdown = () => {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Month</label>
                         <div className="col-sm-10">
-                            {/* <input
-                                type="name"
-                                placeholder="Month"
-                                label="Title"
-                                value={monthDisplay(month)}
-                                onChange={(e) => handleMonthChange(e)} /> */}
-                            <select className="form-control">
+                            <select value={month} className="form-control" onChange={handleMonthChange}>
                                 {monthsArray.map(i => {
                                     return <option
-                                        key={uuid.v4()}
+                                        key={`month-`+i}
+                                        disabled={year === today.getFullYear() && i < today.getMonth()}
                                         className='py-0 pb-1 my-0'
-                                        value={monthDisplay(month)}
-                                        onClick={() => handleMonthChange(i)}>{monthDisplay(i)}</option>
+                                        value={i}>{monthDisplay(i)}</option>
                                 })}
                             </select>
                         </div>
@@ -195,30 +190,26 @@ const NewCountdown = () => {
                     <div className="form-group row">
                         <label className="col-sm-2 col-form-label">Day</label>
                         <div className="col-sm-10">
-                            <input
-                                type="name"
-                                placeholder="Day"
-                                label="Title"
-                                value={day}
-                                onChange={(e) => handleDayChange(e)} />
+                            <select value={day} className="form-control" onChange={handleDayChange}>
+                                {daysArray.map(i => {
+                                    return <option
+                                        key={`day-`+i}
+                                        disabled={year === today.getFullYear() && month === today.getMonth() && i < today.getDate()}
+                                        className='py-0 pb-1 my-0'
+                                        value={i}>{i}</option>
+                                })}
+                            </select>
                         </div>
                     </div>
                     <div className="form-group row">
                         <label  className="col-sm-2 col-form-label">Year</label>
                         <div className="col-sm-10">
-                            {/* <input
-                                type="name"
-                                placeholder="Year"
-                                label="Title"
-                                value={year}
-                                onChange={(e) => handleYearChange(e)} /> */}
-                            <select className="form-control">
-                                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50].map(i => {
+                            <select value={year} className="form-control" onChange={handleYearChange}>
+                                {yearsArray.map(i => {
                                     return <option
-                                        key={uuid.v4()}
+                                        key={`year-`+i}
                                         className='py-0 pb-1 my-0'
-                                        value={i === 0}
-                                        onClick={() => handleYearChange(tomorrow.getFullYear() + i)}>{tomorrow.getFullYear() + i}</option>
+                                        value={i}>{i}</option>
                                 })}
                             </select>
                         </div>
