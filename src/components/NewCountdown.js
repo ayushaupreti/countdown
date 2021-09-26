@@ -11,32 +11,39 @@ const NewCountdown = () => {
 
     const history = useHistory();
 
-    const [title, setTitle] = useState("My Event");
-    const [date, setDate] = useState("");
-    const [id, setId] = useState(uuid.v4());
-
     const startTime = Date.now() / 1000; // use UNIX timestamp in seconds
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
-    const endTime = tomorrow / 1000; // use UNIX timestamp in seconds
+    const [endTime, setEndTime] = useState(tomorrow / 1000); // use UNIX timestamp in seconds
+
+    const [title, setTitle] = useState("");
+    const [date, setDate] = useState(tomorrow);
+    const [id, setId] = useState(uuid.v4());
 
     const [month, setMonth] = useState(tomorrow.getMonth());
     const [day, setDay] = useState(tomorrow.getDate());
     const [year, setYear] = useState(tomorrow.getFullYear());
-    const [time, setTime] = useState(tomorrow.getHours() + `:` + tomorrow.getMinutes());
+    const [time, setTime] = useState(tomorrow.getHours() + `:` + (tomorrow.getMinutes() > 9 ? tomorrow.getMinutes() : '0'+tomorrow.getMinutes()));
     const [hr, setHr] = useState(time.split(":")[0]);
     const [min, setMin] = useState(time.split(":")[1]);
 
-    const monthsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
-    
     const daysInMonth = (month, year) => {
-        return new Date(year, month+1, 0).getDate();
+        return new Date(year, month + 1, 0).getDate();
     }
+    const monthsArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     const [daysArray, setDaysArray] = useState(Array(daysInMonth(month, year)).fill(0).map((e,i)=>i+1));
     const yearsArray = Array(50).fill(today.getFullYear()).map((year, index) => year + index)
 
     const [remainingTime, setRemainingTime] = useState(endTime - startTime);
+    let seconds = remainingTime;
+    let minutes = Math.floor(seconds / 60);
+    let hours = Math.floor(minutes / 60);
+    let days = Math.floor(hours / 24);
+    hours = hours - (days * 24);
+    minutes = minutes - (days * 24 * 60) - (hours * 60);
+    seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+
     const [timer, setTimer] = useState();
 
     useEffect(() => {
@@ -52,13 +59,6 @@ const NewCountdown = () => {
         // eslint-disable-next-line
     }, []);
 
-    let seconds = remainingTime;
-    let minutes = Math.floor(seconds / 60);
-    let hours = Math.floor(minutes / 60);
-    let days = Math.floor(hours / 24);
-    hours = hours - (days * 24);
-    minutes = minutes - (days * 24 * 60) - (hours * 60);
-    seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
 
     const monthDisplay = (code) => {
         switch (code) {
@@ -101,6 +101,12 @@ const NewCountdown = () => {
         setTitle(value);
     };
 
+    const handleIdChange = (e) => {
+        e.preventDefault();
+        let value = e.target.value;
+        setId(value);
+    };
+
     const handleMonthChange = (e) => {
         e.preventDefault();
         let value = e.target.value;
@@ -117,17 +123,17 @@ const NewCountdown = () => {
     };
 
     const handleYearChange = (e) => {
+        if(day < today.getDate()){
+            setDay(today.getDate());
+        }
+        if(month < today.getMonth()){
+            setMonth(today.getMonth());
+        }
         e.preventDefault();
         let value = e.target.value;
         setYear(value);
         setDaysArray(Array(daysInMonth(month, value)).fill(1).map((e, i) => i + 1));
-        updateDate(value, month, day, hr, min, 0);
-    };
-
-    const handleIdChange = (e) => {
-        e.preventDefault();
-        let value = e.target.value;
-        setId(value);
+        updateDate(value, (month < today.getMonth() ? today.getMonth() : month), (day < today.getDate() ? tomorrow.getDate() : day), hr, min, 0);
     };
 
     const submitEvent = () => {
@@ -138,7 +144,8 @@ const NewCountdown = () => {
     const updateDate = (year, month, day, hr, min, sec) =>{
         const d = new Date(year, month, day, hr, min, sec);
         setDate(d);
-        console.log(d);
+        setEndTime(d/1000);
+        setRemainingTime(Math.floor(d / 1000 - startTime));
     };
 
     const handleTime = (e) => {
@@ -161,9 +168,10 @@ const NewCountdown = () => {
                     <div className="form-group row">
                         <div className="col-12">
                             <input
+                                required
                                 className="w-100"
                                 type="name"
-                                placeholder="Title"
+                                placeholder="Event Title"
                                 label="Title"
                                 value={title}
                                 onChange={(e) => handleTitleChange(e)} />
