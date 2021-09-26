@@ -6,7 +6,6 @@ import * as uuid from "uuid";
 import API from '../utility/API';
 import '../styling/NewCountdown.css';
 
-
 const NewCountdown = () => {
 
     const history = useHistory();
