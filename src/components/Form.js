@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Form = ({timerEvent, setTimerEvent}) => {
+const Form = ({timerEvent, setTimerEvent, error}) => {
 
     // timerEvent = {
     //     title: "",
@@ -29,6 +29,9 @@ const Form = ({timerEvent, setTimerEvent}) => {
     const [daysArray, setDaysArray] = useState();
     const yearsArray = Array(50).fill(today.getFullYear()).map((year, index) => year + index)
 
+    const [title, setTitle] = useState("");
+    const [titleError, setTitleError] = useState(error)
+
     useEffect(() => {
         let eDate;
         if (!timerEvent) {
@@ -55,10 +58,7 @@ const Form = ({timerEvent, setTimerEvent}) => {
     }, [])
 
 
-    const [title, setTitle] = useState("");
     // const [date, setDate] = useState(endDate);
-
-    const [titleError, setTitleError] = useState()
 
 
     // useEffect(() => {
@@ -176,18 +176,18 @@ const Form = ({timerEvent, setTimerEvent}) => {
 
     return (
         <div className="container">
-            <div className="my-5">
+            <div className="my-2">
                 {endDate && <form className="w-100">
                     <div className="form-group row pb-3">
                         <div className="col-12">
                             <input
                                 className="w-100 px-2"
                                 type="name"
-                                placeholder={timerEvent.title}
+                                placeholder="Event Title"
                                 label="Title"
                                 value={title}
                                 onChange={(e) => handleTitleChange(e)} />
-                            <div className="text-danger">{titleError}</div>
+                            {titleError && <div className="text-danger">{titleError}</div>}
                         </div>
                     </div>
                     <div className="form-group row pb-3">

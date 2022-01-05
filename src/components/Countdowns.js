@@ -3,6 +3,8 @@ import { useHistory } from 'react-router';
 import AddBoxIcon from '@material-ui/icons/AddBox'; 
 import ShareIcon from '@material-ui/icons/Share';
 import EditIcon from '@material-ui/icons/Edit';
+import CancelIcon from '@material-ui/icons/Cancel';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import API from '../utility/API';
 import moment from 'moment';
 import Form from './Form'
@@ -26,6 +28,21 @@ const Countdowns = () => {
         history.push("/newcountdown")
     };
 
+    const handleCancel = () => {
+        history.push('countdowns');
+    };
+
+    const submitEvent = () => {
+        let title = timerEvent.title
+        let date = new Date(timerEvent.endTime * 1000)
+        if (title) {
+            // API.addEvent(title, date, id);
+            history.push('countdowns');
+        } else {
+            alert("add title")
+        }
+    };
+
     const convertToSeconds = (date) => {
         const d = new Date(date)
         return d.getTime()/1000
@@ -35,7 +52,7 @@ const Countdowns = () => {
         <div className="container" >
             <div className="row d-flex align-items-center mt-5">
                 {events && events.map((userEvent, index) =>
-                    <div key={userEvent.eventTitle + index} className="mb-4 col-12 col-md-4">
+                    <div key={userEvent.eventTitle + index} className="mb-4 col-12 col-md-6">
                         <div className="card" id={`heading${index}`}>
                             <div className="card-body d-flex justify-content-between">
                                 <div>
@@ -49,7 +66,11 @@ const Countdowns = () => {
                             </div>
                             <div id={`collapse${index}`} className="collapse" aria-labelledby={`heading${index}`} data-parent="#accordion">
                                 <div className="card-body">
-                                    <Form timerEvent={{"title": userEvent.title, "endTime": convertToSeconds(userEvent.eventDate)}} setTimerEvent={setTimerEvent}/>
+                                    <Form timerEvent={{"title": userEvent.eventTitle, "endTime": convertToSeconds(userEvent.eventDate)}} setTimerEvent={setTimerEvent}/>
+                                </div>
+                                <div className="m-3 d-flex justify-content-between">
+                                    <CancelIcon fontSize="large" onClick={handleCancel} />
+                                    <CheckCircleIcon fontSize="large" onClick={submitEvent} />
                                 </div>
                             </div>
                         </div>

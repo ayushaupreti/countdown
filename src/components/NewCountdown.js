@@ -14,7 +14,7 @@ const NewCountdown = () => {
     const [timerEvent, setTimerEvent] = useState()
     const [id, setId] = useState(uuid.v4())
 
-    // const [titleError, setTitleError] = useState()
+    const [titleError, setTitleError] = useState()
 
     const handleCancel = () => {
         history.push('countdowns');
@@ -33,7 +33,7 @@ const NewCountdown = () => {
             API.addEvent(title, date, id);
             history.push('countdowns');
         } else{
-            alert("add title")
+            setTitleError("Please add an event title")
         }
     };
 
@@ -43,7 +43,7 @@ const NewCountdown = () => {
                 <CancelIcon fontSize="large" onClick={handleCancel} />
                 <CheckCircleIcon fontSize="large" onClick={submitEvent} />
             </div>
-            <Form timerEvent={timerEvent} setTimerEvent={setTimerEvent}/>
+            <Form timerEvent={timerEvent} setTimerEvent={setTimerEvent} error={titleError}/>
             {timerEvent && <Timer key={timerEvent.endTime} endTime={timerEvent.endTime}/> }
             <div className="my-5">
                 <div className="font-weight-bold mb-2"> Change the url: &nbsp;</div>
