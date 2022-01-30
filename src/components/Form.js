@@ -187,17 +187,17 @@ const Form = ({timerEvent, setTimerEvent, error}) => {
                                 label="Title"
                                 value={title}
                                 onChange={(e) => handleTitleChange(e)} />
-                            {titleError && <div className="text-danger">{titleError}</div>}
+                            {titleError &&  <div className="text-danger">{titleError}</div>}
                         </div>
                     </div>
                     <div className="form-group row pb-3">
-                        <label className="col-2 col-form-label">Time</label>
+                        <label className="col-2 p-0 col-form-label">Time</label>
                         <div className="col-10">
                             <input type="time" className="w-100 px-2" min="00:00" max="23:59" value={time} onChange={handleTime} />
                         </div>
                     </div>
                     <div className="form-group row pb-3">
-                        <label className="col-2 col-form-label">Month</label>
+                        <label className="col-2 p-0 col-form-label">Month</label>
                         <div className="col-10">
                             <select value={month} className="form-control" onChange={(e) => { handleMonthChange(e) }}>
                                 {monthsArray.map(i => {
@@ -211,7 +211,7 @@ const Form = ({timerEvent, setTimerEvent, error}) => {
                         </div>
                     </div>
                     <div className="form-group row pb-3">
-                        <label className="col-2 col-form-label">Day</label>
+                        <label className="col-2 p-0 col-form-label">Day</label>
                         <div className="col-10">
                             <select value={day} className="form-control" onChange={(e) => { handleDayChange(e) }}>
                                 {daysArray.map(i => {
@@ -225,7 +225,7 @@ const Form = ({timerEvent, setTimerEvent, error}) => {
                         </div>
                     </div>
                     <div className="form-group row pb-3">
-                        <label className="col-2 col-form-label">Year</label>
+                        <label className="col-2 p-0 col-form-label">Year</label>
                         <div className="col-10">
                             <select value={year} className="form-control" onChange={(e) => { handleYearChange(e) }}>
                                 {yearsArray.map(i => {

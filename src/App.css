@@ -1,5 +1,7 @@
 .app {
-  background-color: #ebf6ff;
+  background: #DAE2F8;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(#ee9ca7, #ffdde1);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(#ee9ca7, #ffdde1); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
   height: 100vh;
   overflow: auto;
 }

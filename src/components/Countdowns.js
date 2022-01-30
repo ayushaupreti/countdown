@@ -33,10 +33,11 @@ const Countdowns = () => {
     };
 
     const submitEvent = () => {
+        console.log(timerEvent)
         let title = timerEvent.title
         let date = new Date(timerEvent.endTime * 1000)
         if (title) {
-            // API.addEvent(title, date, id);
+            // API.updateEvent(id);
             history.push('countdowns');
         } else {
             alert("add title")

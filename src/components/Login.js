@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Auth } from "aws-amplify";
 import { useHistory } from 'react-router';
 import { useAppContext } from "../libs/contextLib";
+import '../component_styling/Login.css';
 
 const Login = () => {
 
